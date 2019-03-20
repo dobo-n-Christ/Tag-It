@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: gO5NAd+C2TLFYRuaQnDhrRnarq1RilaUi3rQroS4QDjOLWkMJ0SYmlwefCPFCOm7DZd4OQ7SLTGGMkp7N7kT0uG4s1x8AhQ3PHlPEroOPyNNVVWIMEyx1AtjpuI+RB6egVLne8sa9c13NYrXvFx/oBsWR85T7aoleuPDmlVLjHZ98mq+U9iEUCrTKPNIPkASQ//82DTx78nJESJMZfGcriavLJaRNQOkXo+UYayee5v3BI1lEt7IPW1ltJ129+3A1Ly39U6sQulvzxnhQzwYpYhPUHVNSWgwxhQx4We2KXZAq8lhQzDH9l7TQmA7EDC0QqfgGSbb5LimA8t3M1z7yn3xgqkjlpQah6g4Yg+FggvSd9p4lbWioVBAp5kH+Ko7R/h2bcca7WTPb5ZGBxQU307NxvXUpd4Ypl47YsIsX5/uBLFTd4tzkAZLf882NV2GOe+B0zatanT2DvSZXU0R6RGWmMePVAmvCxQy8jr6q0AJ9W4vjxFWCcvtDPd+UMSEklszMOCEMWIr/vF8/ZMso7rS8/TbICrYDYejaZGEn6yotOCnodumRWpjjAKhBz7Z9DsnJeDnfoq6GGl3mwEZV9kohIm/4ETCVvsy3lc8X86be427C/nCqdOTornZ0311ewlg38fe+fYdPb+S8zNXl9arQWtTp5DuZt18k7dgB8Q=
+  app: limitless-journey-93042
+  on:
+    repo: dobo-n-Christ/Tag-It
