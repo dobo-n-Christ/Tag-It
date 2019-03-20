@@ -1,0 +1,15 @@
+{
+  "name": "tag-it",
+  "version": "1.0.0",
+  "description": "Tagging app for Node capstone",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --exit"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "nodemon": "^1.18.10"
+  }
+}
