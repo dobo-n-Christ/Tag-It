@@ -4,7 +4,8 @@
   "description": "Tagging app for Node capstone",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --exit"
+    "start": "node server.js",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
