@@ -4,22 +4,32 @@ const express = require('express');
 const ejs = require('ejs');
 const app = express();
 
+app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.render('pages/index');
+    res.render('layout/layout', {
+        main: 'pages/index'
+    });
 });
 
 app.get('/dashboard', (req, res) => {
-    res.render('pages/dashboard');
+    // logout
+    res.render('layout/layout', {
+        main: 'pages/dashboard'
+    });
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login');
+    res.render('layout/layout', {
+        main: 'pages/login'
+    });
 });
 
-app.get('/signup', (req, res) => {
-    res.render('pages/signup');
+app.get('/register', (req, res) => {
+    res.render('layout/layout', {
+        main: 'pages/register'
+    });
 });
 
 if(require.main === module) {

@@ -35,10 +35,10 @@ describe('login page', function() {
     });
 });
 
-describe('signup page', function() {
+describe('registration page', function() {
     it('should exist', function() {
         return chai.request(app)
-        .get('/signup')
+        .get('/register')
         .then(function(res) {
             expect(res).to.have.status(200);
             expect(res).to.be.html;
