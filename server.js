@@ -29,8 +29,8 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 passport.use(localStrategy);
 passport.use(jwtStrategy);
-app.use('api/users', usersRouter);
-app.use('api/auth', authRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/auth', authRouter);
 
 const jwtAuth = passport.authenticate('jwt', {session: false});
 
@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', jwtAuth, (req, res) => {
     // logout
     res.render('layout/layout', {
         main: 'pages/dashboard'
