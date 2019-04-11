@@ -2,17 +2,14 @@
 
 require('dotenv').config();
 const express = require('express');
-const ejs = require('ejs');
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 const passport = require('passport');
-mongoose.Promise = global.Promise;
-
 const {router: usersRouter} = require('./users');
 const {router: authRouter, localStrategy, jwtStrategy} = require('./auth');
 const {PORT, DATABASE_URL} = require('./config');
 const app = express();
-
 app.use(morgan('common'));
 
 app.use((req, res, next) => {
@@ -37,13 +34,6 @@ const jwtAuth = passport.authenticate('jwt', {session: false});
 app.get('/', (req, res) => {
     res.render('layout/layout', {
         main: 'pages/index'
-    });
-});
-
-app.get('/dashboard', jwtAuth, (req, res) => {
-    // logout
-    res.render('layout/layout', {
-        main: 'pages/dashboard'
     });
 });
 

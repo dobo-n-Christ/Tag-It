@@ -5,34 +5,31 @@ const {Strategy: JwtStrategy, ExtractJwt} = require('passport-jwt');
 const {User} = require('../users/models');
 const {JWT_SECRET} = require('../config');
 
-const localStrategy = new LocalStrategy((username, password, callback) => {
-    let user;
-    User.findOne({username: username})
-    .then(_user => {
-        user = _user;
+const localStrategy = new LocalStrategy(async (username, password, done) => {
+    try {
+        const user = await User.findOne({username: username});
         if (!user) {
-            return Promise.reject({
+            throw {
                 reason: 'Login Error',
                 message: 'Incorrect username or password'
-            });
-        };
-        return user.validatePassword(password);
-    })
-    .then(valid => {
+            }
+        }
+        const valid = await user.validatePassword(password);
         if (!valid) {
-            return Promise.reject({
+            throw {
                 reason: 'Login Error',
                 message: 'Incorrect username or password'
-            });
-        };
-        return callback(null, user);
-    })
-    .catch(err => {
+            }
+        }
+        return done(null, user);
+    }
+    catch (err) {
         if (err.reason === 'Login Error') {
-            return callback(null, false, err);
-        };
-        return callback(err, false);
-    });
+            // console.log(err);
+            return done(null, false, err);
+        }
+        return done(err, false);
+    }
 });
 
 const jwtStrategy = new JwtStrategy(

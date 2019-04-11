@@ -29,16 +29,16 @@ UserSchema.methods.serialize = function() {
         username: this.username || '',
         firstName: this.firstName || '',
         lastName: this.lastName || ''
-    };
-};
+    }
+}
 
 UserSchema.methods.validatePassword = function(password) {
     return bcrypt.compare(password, this.password);
-};
+}
 
 UserSchema.statics.hashPassword = function(password) {
     return bcrypt.hash(password, 11);
-};
+}
 
 const User = mongoose.model('User', UserSchema);
 
