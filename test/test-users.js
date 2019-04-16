@@ -1,6 +1,5 @@
 'use strict';
 
-require('dotenv').config();
 const {describe, it, before, after, afterEach} = require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
