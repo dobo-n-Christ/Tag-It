@@ -3,9 +3,12 @@
 const express = require('express');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const {localStrategy, jwtStrategy} = require('./strategies');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const router = express.Router();
+passport.use(localStrategy);
+passport.use(jwtStrategy);
 
 const createAuthToken = function(user) {
     return jwt.sign({user}, config.JWT_SECRET, 

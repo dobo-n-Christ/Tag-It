@@ -1,5 +1,6 @@
 'use strict';
 
+const {describe, it, before, after, beforeEach, afterEach} = require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const jwt = require('jsonwebtoken');
@@ -50,9 +51,7 @@ describe('Auth endpoints', function() {
                 password
             })
             .then(function(res) {
-                console.log(res.body);
                 expect(res).to.have.status(401);
-                // expect(res.body.reason).to.equal('Login Error');
             });
         });
         it('should reject request with incorrect password', function() {

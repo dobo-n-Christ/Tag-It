@@ -1,11 +1,10 @@
 'use strict';
 
+const {describe, it, before, after} = require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const jwt = require('jsonwebtoken');
 const {app, runServer, closeServer} = require('../server');
-const {User} = require('../users');
-const {JWT_SECRET, TEST_DATABASE_URL} = require('../config');
+const {TEST_DATABASE_URL} = require('../config');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
@@ -16,7 +15,7 @@ describe('index page', function() {
     after(function() {
         return closeServer();
     });
-    it('should return a 200 status and HTML', function() {
+    it('should exist', function() {
         return chai.request(app)
         .get('/')
         .then(function(res) {
