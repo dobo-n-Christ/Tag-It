@@ -5,6 +5,12 @@ const bodyParser = require('body-parser');
 const {User} = require('./models');
 const router = express.Router();
 const jsonParser = bodyParser.json();
+const passport = require('passport');
+const jwtAuth = passport.authenticate('jwt', {session: false});
+
+router.get('/', jwtAuth, async (req, res) => {
+    return res.status(200).json(req.user);
+});
 
 router.post('/', jsonParser, async (req, res) => {
     try {
@@ -95,34 +101,3 @@ router.post('/', jsonParser, async (req, res) => {
 });
 
 module.exports = {router};
-
-//     return User.find({username}).count()
-//     .then(count => {
-//         if (count > 0) {
-//             return Promise.reject({
-//                 code: 422,
-//                 reason: 'Validation Error',
-//                 message: 'Username already taken',
-//                 location: 'username'
-//             });
-//         };
-//         return User.hashPassword(password);
-//     })
-//     .then(hash => {
-//         return User.create({
-//             username,
-//             password: hash,
-//             firstName,
-//             lastName
-//         });
-//     })
-//     .then(user => {
-//         return res.status(201).json(user.serialize());
-//     })
-//     .catch(err => {
-//         if (err.reason === 'Validation Error') {
-//             return res.status(err.code).json(err);
-//         };
-//         res.status(500).json({message: 'Internal server error'});
-//     });
-// });

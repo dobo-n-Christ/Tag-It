@@ -7,7 +7,6 @@ mongoose.Promise = global.Promise;
 const morgan = require('morgan');
 const {router: usersRouter} = require('./users');
 const {router: authRouter} = require('./auth');
-const dashboardRouter = require('./dashboardRouter');
 const {PORT, DATABASE_URL} = require('./config');
 const app = express();
 app.use(morgan('common'));
@@ -26,7 +25,6 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use('/api/users', usersRouter);
 app.use('/api/auth', authRouter);
-app.use('/dashboard', dashboardRouter);
 
 app.get('/', (req, res) => {
     res.render('layout/layout', {
@@ -43,6 +41,13 @@ app.get('/login', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('layout/layout', {
         main: 'pages/register'
+    });
+});
+
+app.get('/dashboard', (req, res) => {
+    // logout
+    res.render('layout/layout', {
+        main: 'pages/dashboard'
     });
 });
 
@@ -93,7 +98,8 @@ function closeServer() {
 }
 
 if (require.main === module) {
-    runServer(DATABASE_URL).catch(err => console.error(err));
+    runServer(DATABASE_URL)
+    .catch(err => console.error(err));
 }
 
 module.exports = {app, runServer, closeServer};

@@ -3,13 +3,14 @@
 const {describe, it, before, after, afterEach} = require('mocha');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const jwt = require('jsonwebtoken');
 const {app, runServer, closeServer} = require('../server');
 const {User} = require('../users');
-const {TEST_DATABASE_URL} = require('../config');
+const {TEST_DATABASE_URL, JWT_SECRET} = require('../config');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe('/api/user', function() {
+describe('User API endpoints', function() {
     const username = 'exampleUser';
     const password = 'examplePassword';
     const firstName = 'exampleFirst';
@@ -24,6 +25,108 @@ describe('/api/user', function() {
         return User.deleteOne();
     });
     describe('/api/users', function() {
+        describe('GET', function() {
+            it('should reject request lacking credentials', function() {
+                return chai.request(app)
+                .get('/api/users')
+                .then(function(res) {
+                    expect(res).to.have.status(401);
+                });
+            });
+            it('should reject request with invalid auth token', function() {
+                const token = jwt.sign(
+                    {
+                        user: {
+                            username,
+                            firstName,
+                            lastName
+                        }
+                    },
+                    'incorrectSecret',
+                    {
+                        algorithm: 'HS256',
+                        subject: username,
+                        expiresIn: '7d'
+                    }
+                );
+                return chai.request(app)
+                .get('/api/users')
+                .set('Authorization', `Bearer ${token}`)
+                .then(function(res) {
+                    expect(res).to.have.status(401);
+                });
+            });
+            it('should reject request with expired auth token', function() {
+                const token = jwt.sign(
+                    {
+                        user: {
+                            username,
+                            firstName,
+                            lastName
+                        },
+                        exp: Math.floor(Date.now()/1000) - 10
+                    },
+                    JWT_SECRET,
+                    {
+                        algorithm: 'HS256',
+                        subject: username
+                    }
+                );
+                return chai.request(app)
+                .get('/api/users')
+                .set('Authorization', `Bearer ${token}`)
+                .then(function(res) {
+                    expect(res).to.have.status(401);
+                });
+            });
+            it('should return correct user', function() {
+                User.create({
+                    username,
+                    password,
+                    firstName,
+                    lastName
+                });
+                const token = jwt.sign(
+                    {
+                        user: {
+                            username,
+                            firstName,
+                            lastName
+                        }
+                    },
+                    JWT_SECRET,
+                    {
+                        algorithm: 'HS256',
+                        subject: username,
+                        expiresIn: '7d'
+                    }
+                );
+                const decodedToken = jwt.decode(token);
+                return chai.request(app)
+                .get('/api/users')
+                .set('Authorization', `Bearer ${token}`)
+                .then(function(res) {
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
+                    expect(res.body).to.be.a('object');
+                    expect(res.body).to.include.keys('username', 'firstName', 'lastName');
+                    expect(res.body.username).to.equal(username);
+                    expect(res.body.firstName).to.equal(firstName);
+                    expect(res.body.lastName).to.equal(lastName);
+                    const newUsername = res.body.username;
+                    return User.findOne({username: newUsername});
+                })
+                .then(function(user) {
+                    expect(user).to.not.be.null;
+                    expect(decodedToken.user.username).to.equal(user.username);
+                    expect(decodedToken.user.firstName).to.equal(user.firstName);
+                    expect(decodedToken.user.lastName).to.equal(user.lastName);
+                    expect(username).to.equal(user.username);
+                    expect(firstName).to.equal(user.firstName);
+                    expect(lastName).to.equal(user.lastName);
+                });
+            });
+        });
         describe('POST', function() {
             it('should reject request with missing username', function() {
                 return chai.request(app)
@@ -238,7 +341,7 @@ describe('/api/user', function() {
                     expect(res.body.username).to.equal(username);
                     expect(res.body.firstName).to.equal(firstName);
                     expect(res.body.lastName).to.equal(lastName);
-                    return User.findOne({username});
+                    return User.findOne({username: username});
                 })
                 .then(function(user) {
                     expect(user).to.not.be.null;
@@ -268,7 +371,7 @@ describe('/api/user', function() {
                     expect(res.body.username).to.equal(username);
                     expect(res.body.firstName).to.equal(firstName);
                     expect(res.body.lastName).to.equal(lastName);
-                    return User.findOne({username});
+                    return User.findOne({username: username});
                 })
                 .then(function(user) {
                     expect(user).to.not.be.null;

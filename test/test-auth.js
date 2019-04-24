@@ -10,7 +10,7 @@ const {TEST_DATABASE_URL, JWT_SECRET} = require('../config');
 const expect = chai.expect;
 chai.use(chaiHttp);
 
-describe('Auth endpoints', function() {
+describe('Auth API endpoints', function() {
     const username = 'exampleUser';
     const password = 'examplePassword';
     const firstName = 'exampleFirst';
